@@ -1,23 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import { lazy, Suspense } from "react";
+// import PokemonList from "./PokemonList";
+import { ErrorBoundary } from "./ErrorBoundary";
+import "./App.css";
+
+const PokemonList = lazy(() => import("./PokemonList"));
+
+function Loader() {
+  return <div>Loading Component...</div>;
+}
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Suspense fallback={<Loader />}>
+        <ErrorBoundary fallback={<h2>El API no funciona</h2>}>
+          <PokemonList />
+        </ErrorBoundary>
+        <ErrorBoundary fallback={<h2>El API no funciona</h2>}>
+          <PokemonList apiURL="https://pokeapi.co/api/v2/pokemon" />
+        </ErrorBoundary>
+      </Suspense>
     </div>
   );
 }
